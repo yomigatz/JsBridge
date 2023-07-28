@@ -36,6 +36,7 @@
     <input type="file" value="打开文件"/>
 </p>
 </body>
+<script src="./JSBridge.js"></script>
 <script>
         function testDiv() {
             document.getElementById("show").innerHTML = document.getElementsByTagName("html")[0].innerHTML;
@@ -50,7 +51,7 @@
             WebViewJavascriptBridge.doSend(
                 data
                 , function(responseData) {
-                    document.getElementById("show").innerHTML = "repsonseData from java, data = " + responseData
+                    document.getElementById("show").innerHTML = str1 + "repsonseData from java, data = " + responseData
                 }
             );
 
@@ -74,41 +75,6 @@
             document.getElementById("show").innerHTML = logContent;
         }
 
-        function connectWebViewJavascriptBridge(callback) {
-            if (window.WebViewJavascriptBridge && WebViewJavascriptBridge.inited) {
-                callback(WebViewJavascriptBridge)
-            } else {
-                document.addEventListener(
-                    'WebViewJavascriptBridgeReady'
-                    , function() {
-                        callback(WebViewJavascriptBridge)
-                    },
-                    false
-                );
-            }
-        }
-
-        connectWebViewJavascriptBridge(function(bridge) {
-            bridge.init(function(message, responseCallback) {
-                console.log('JS got a message', message);
-                var data = {
-                    'Javascript Responds': '测试中文!'
-                };
-
-                if (responseCallback) {
-                    console.log('JS responding with', data);
-                    responseCallback(data);
-                }
-            });
-
-            bridge.registerHandler("functionInJs", function(data, responseCallback) {
-                document.getElementById("show").innerHTML = ("data from Java: = " + data + Date.now());
-                if (responseCallback) {
-                    var responseData = "Javascript Says Right back aka!";
-                    responseCallback(responseData);
-                }
-            });
-        })
 
 </script>
 

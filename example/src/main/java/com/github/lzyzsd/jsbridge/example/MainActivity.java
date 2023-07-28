@@ -4,14 +4,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 
+import com.common.anni.lib.brh5.H5SourceManager;
 import com.github.lzyzsd.jsbridge.BridgeWebView;
 import com.github.lzyzsd.jsbridge.OnBridgeCallback;
 import com.google.gson.Gson;
@@ -77,9 +80,14 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 		});
 
+		initSetting();
+
 		webView.addJavascriptInterface(new MainJavascriptInterface(webView.getCallbacks(), webView), "WebViewJavascriptBridge");
 		webView.setGson(new Gson());
-		webView.loadUrl("file:///android_asset/demo.html");
+//		webView.loadUrl("file:///android_asset/test/demo.html");
+//		webView.loadUrl("file:///android_asset/"+ H5SourceManager.ROOT_PATH +"/index.html#/analysis?");
+		String url = "file:///android_asset/brH5/index.html#/analysis?token=eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAEWMwQ6DIBBE_2XPbsOCoHjyVxYK1cZWA5g0afrvhfTQ25vMzHvDvawwQc_RaWElylE57EMkZK8jxpGMYGUGrQR0sHKBiYwVauhJUgf5dPXdmpwruLTuoVIHfF5r9gunW0A-DvxX4XX8JHYYbZPwWZb9Wed5CdvGKfBMRl38_mji6iEhtPx8Acf4DQesAAAA.1Gs0t2EZlD3PdMGAdssjcEV5E0O9-HYP06LM3tkh4YMmxzm9d67MxbN4iqZtISKiFU0-_-SUk4F8f2x8rEjcyg&version=V1.1.0.20230728&apptype=Android&deviceNumber=EA09003A&env=dev&language=zh_CN";
+		webView.loadUrl(url);
         User user = new User();
         Location location = new Location();
         location.address = "SDU";
@@ -95,6 +103,31 @@ public class MainActivity extends Activity implements OnClickListener {
 
         webView.sendToWeb("hello");
 
+	}
+
+	private void initSetting() {
+		WebSettings settings = webView.getSettings();
+		settings.setJavaScriptEnabled(true);
+		settings.setJavaScriptCanOpenWindowsAutomatically(true);
+		settings.setPluginState(WebSettings.PluginState.ON);
+		settings.setLoadsImagesAutomatically(true);
+		settings.setBlockNetworkImage(false);
+		// 禁用缓存
+		settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+		settings.setUseWideViewPort(true);
+		settings.setLoadWithOverviewMode(true);
+		settings.setSupportZoom(true);
+		settings.setBuiltInZoomControls(true);
+		settings.setDisplayZoomControls(false);
+		settings.setDomStorageEnabled(true);
+		settings.setDatabaseEnabled(true);
+		settings.setSupportMultipleWindows(false);
+		settings.setAllowUniversalAccessFromFileURLs(true);
+
+		settings.setUserAgentString("${settings.userAgentString} ");
+		settings.setMediaPlaybackRequiresUserGesture(true);//媒体自动播放
+		settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
+		settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 	}
 
 	public void pickFile() {

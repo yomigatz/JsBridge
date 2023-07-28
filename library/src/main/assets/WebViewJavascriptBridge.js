@@ -63,16 +63,6 @@
         delete messageHandlers[handlerName];
     }
 
-    // 调用线程
-    function callHandler(handlerName, data, responseCallback) {
-        // 如果方法不需要参数，只有回调函数，简化JS中的调用
-        if (arguments.length == 2 && typeof data == 'function') {
-			responseCallback = data;
-			data = null;
-		}
-        _doSend(handlerName, data, responseCallback);
-    }
-
     //sendMessage add message, 触发native处理 sendMessage
     function _doSend(handlerName, message, responseCallback) {
         var callbackId;
@@ -104,6 +94,17 @@
 
         sendMessageQueue.push(message);
         messagingIframe.src = CUSTOM_PROTOCOL_SCHEME + '://' + QUEUE_HAS_MESSAGE;
+    }
+
+    // 调用线程
+    function callHandler(handlerName, data, responseCallback) {
+//        console.log('WebViewJavascriptBridge callHandler: ', bridge)
+        // 如果方法不需要参数，只有回调函数，简化JS中的调用
+        if (arguments.length == 2 && typeof data == 'function') {
+			responseCallback = data;
+			data = null;
+		}
+        _doSend(handlerName, data, responseCallback);
     }
 
     // 提供给native调用,该函数作用:获取sendMessageQueue返回给native,由于android不能直接获取返回的内容,所以使用url shouldOverrideUrlLoading 的方式返回内容

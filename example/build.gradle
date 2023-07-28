@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+//apply plugin: 'com.didi.dokit'
 
 android {
     compileSdkVersion 28
@@ -6,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.github.lzyzsd.jsbridge.example"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -17,11 +18,26 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main {
+            assets {
+                srcDirs 'src\\main\\assets'
+            }
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':library')
+//    implementation project(':library')
+    implementation 'com.github.lzyzsd.jsbridge:jsbridge:2.0.0'
+
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation files('../example/libs/Lib-BrioessH5-src@1.2.0_release.aar')
+
+//    debugImplementation "io.github.didi.dokit:dokitx:$dokit_Version"
+//    releaseImplementation "io.github.didi.dokit:dokitx-no-op:$dokit_Version"
+
 }
