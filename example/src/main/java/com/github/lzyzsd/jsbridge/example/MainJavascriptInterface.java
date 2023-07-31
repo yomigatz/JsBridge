@@ -37,4 +37,19 @@ public class MainJavascriptInterface extends BridgeWebView.BaseJavascriptInterfa
         Log.d("MainJavascriptInterface", data + ", callbackId: " + callbackId + " " + Thread.currentThread().getName());
         mWebView.sendResponse("submitFromWeb response", callbackId);
     }
+
+    @JavascriptInterface
+    public void test1(String data, String callbackId) {
+        Log.d("MainJavascriptInterface","test1 >>>>"+ data);
+//        mWebView.sendResponse("submitFromWeb response", callbackId);
+    }
+
+
+
+    @JavascriptInterface
+    public void js_bridge_channel(String data, String callbackId) {
+        Log.d("MainJavascriptInterface","js_bridge_channel"+ data);
+        Log.d("MainJavascriptInterface", data + ", callbackId: " + callbackId + " " + Thread.currentThread().getName());
+        mWebView.sendResponse("js_bridge_channel response", callbackId);
+    }
 }

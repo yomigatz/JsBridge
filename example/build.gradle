@@ -30,8 +30,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-//    implementation project(':library')
-    implementation 'com.github.lzyzsd.jsbridge:jsbridge:2.0.0'
+    implementation project(':library')
+//    implementation 'com.github.lzyzsd.jsbridge:jsbridge:2.0.0'
 
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.google.code.gson:gson:2.8.5'

@@ -2,14 +2,16 @@ package com.github.lzyzsd.jsbridge.example;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -17,20 +19,23 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.Toast;
 
-import com.common.anni.lib.brh5.H5SourceManager;
-import com.github.lzyzsd.jsbridge.BridgeWebView;
-import com.github.lzyzsd.jsbridge.OnBridgeCallback;
-import com.google.gson.Gson;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class MainActivity extends Activity implements OnClickListener {
+public class XiangxueActivity extends Activity implements OnClickListener {
 
     private final String TAG = "MainActivity";
 
-    BridgeWebView webView;
+    WebView webView;
 
     Button button;
 
@@ -53,39 +58,25 @@ public class MainActivity extends Activity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_xiangxue);
 
-        webView = (BridgeWebView) findViewById(R.id.webView);
+        webView = findViewById(R.id.webView);
+        webView.getSettings().setJavaScriptEnabled(true);
+        //设置为ChromeClinet 才能执行js代码
+        WebChromeClient webChromeClient = new WebChromeClient();
+        webView.setWebChromeClient(webChromeClient);
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        //加载本地html
+        webView.loadUrl("file:///android_asset/web/my_index.html");
+
+        String jsCommand = assetFile2Str(this, "web/xiangxuejs.js");
+        webView.loadUrl("javascript:" + jsCommand);
 
         button = (Button) findViewById(R.id.button);
 
         button.setOnClickListener(this);
 
-
-        webView.setWebChromeClient(new WebChromeClient() {
-
-            @SuppressWarnings("unused")
-            public void openFileChooser(ValueCallback<Uri> uploadMsg, String AcceptType, String capture) {
-                this.openFileChooser(uploadMsg);
-            }
-
-            @SuppressWarnings("unused")
-            public void openFileChooser(ValueCallback<Uri> uploadMsg, String AcceptType) {
-                this.openFileChooser(uploadMsg);
-            }
-
-            public void openFileChooser(ValueCallback<Uri> uploadMsg) {
-                mUploadMessage = uploadMsg;
-                pickFile();
-            }
-
-            @Override
-            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-                mUploadMessageArray = filePathCallback;
-                pickFile();
-                return true;
-            }
-        });
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -95,31 +86,7 @@ public class MainActivity extends Activity implements OnClickListener {
         });
 
         initSetting();
-
-        webView.addJavascriptInterface(new MainJavascriptInterface(webView.getCallbacks(), webView), "WebViewJavascriptBridge");
-        webView.setGson(new Gson());
-//		webView.loadUrl("http://www.baidu.com");
-		webView.loadUrl("file:///android_asset/test/demo.html");
-//		webView.loadUrl("file:///android_asset/"+ H5SourceManager.ROOT_PATH +"/index.html#/analysis?");
-//        String url = "file:///android_asset/brH5/index.html#/analysis?token=eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAEWMwQ6DIBBE_2XPbsOCoHjyVxYK1cZWA5g0afrvhfTQ25vMzHvDvawwQc_RaWElylE57EMkZK8jxpGMYGUGrQR0sHKBiYwVauhJUgf5dPXdmpwruLTuoVIHfF5r9gunW0A-DvxX4XX8JHYYbZPwWZb9Wed5CdvGKfBMRl38_mji6iEhtPx8Acf4DQesAAAA.1Gs0t2EZlD3PdMGAdssjcEV5E0O9-HYP06LM3tkh4YMmxzm9d67MxbN4iqZtISKiFU0-_-SUk4F8f2x8rEjcyg&version=V1.1.0.20230728&apptype=Android&deviceNumber=EA09003A&env=dev&language=zh_CN";
-//        String url = "file:///android_asset/brH5/index.html#/order?token=eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAEWMwQ6DIBBE_2XPbsOCoHjyVxYK1cZWA5g0afrvhfTQ25vMzHvDvawwQc_RaWElylE57EMkZK8jxpGMYGUGrQR0sHKBiYwVauhJUgf5dPXdmpwruLTuoVIHfF5r9gunW0A-DvxX4XX8JHYYbZPwWZb9Wed5CdvGKfBMRl38_mji6iEhtPx8Acf4DQesAAAA.1Gs0t2EZlD3PdMGAdssjcEV5E0O9-HYP06LM3tkh4YMmxzm9d67MxbN4iqZtISKiFU0-_-SUk4F8f2x8rEjcyg&version=V1.1.0.20230729&apptype=Android&deviceNumber=EA09003A&env=dev&language=zh_CN";
-//        webView.loadUrl("file:///android_asset/test/my_index.html");
-//        webView.loadUrl(url);
-        User user = new User();
-        Location location = new Location();
-        location.address = "SDU";
-        user.location = location;
-        user.name = "大头鬼";
-
-
-        webView.callHandler("functionInJs", new Gson().toJson(user), new OnBridgeCallback() {
-            @Override
-            public void onCallBack(String data) {
-                Log.d(TAG, "onCallBack: " + data);
-            }
-        });
-
-        webView.sendToWeb("hello");
+        webView.addJavascriptInterface(this, "main");
 
     }
 
@@ -169,12 +136,6 @@ public class MainActivity extends Activity implements OnClickListener {
         }
     }
 
-    public void pickFile() {
-        Intent chooserIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        chooserIntent.setType("image/*");
-        startActivityForResult(chooserIntent, RESULT_CODE);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == RESULT_CODE) {
@@ -200,18 +161,68 @@ public class MainActivity extends Activity implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (button.equals(v)) {
-            webView.callHandler("functionInJs", "data from Java", new OnBridgeCallback() {
-
-                @Override
-                public void onCallBack(String data) {
-                    // TODO Auto-generated method stub
-                    Log.i(TAG, "reponse data from js " + data);
-                }
-
-            });
-        }
-
     }
 
+    public String assetFile2Str(Context c, String urlStr) {
+        InputStream in = null;
+        try {
+            in = c.getAssets().open(urlStr);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+            String line = null;
+            StringBuilder sb = new StringBuilder();
+            do {
+                line = bufferedReader.readLine();
+                if (line != null && !line.matches("^\\s*\\/\\/.*")) {
+                    sb.append(line);
+                }
+            } while (line != null);
+
+            bufferedReader.close();
+            in.close();
+
+            return sb.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+        return null;
+    }
+
+    @JavascriptInterface
+    public void click1(String msg) {
+        Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_SHORT).show();
+        try {
+            JSONObject jsonObject=new JSONObject(msg);
+            JSONObject param = jsonObject.getJSONObject("param");
+            String callbackname = param.getString("callbackname");
+            handleCallback(callbackname,"333333");
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void handleCallback(final String callbackname, final String response){
+        if(!TextUtils.isEmpty(callbackname) && !TextUtils.isEmpty(response)){
+            webView.post(new Runnable() {
+                @Override
+                public void run() {
+                    String jscode = "javascript:xiangxuejs.callback('" + callbackname + "'," + response + ")";
+                    Log.e("xxxxxx", jscode);
+                    ValueCallback<String> resultCallback=new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String value) {
+                            Log.e("2222222", value);
+                        }
+                    };
+                    webView.evaluateJavascript(jscode, resultCallback);
+                }
+            });
+        }
+    }
 }
