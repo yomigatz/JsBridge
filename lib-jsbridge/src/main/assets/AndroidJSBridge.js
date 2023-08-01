@@ -2,7 +2,7 @@
 //since comments will cause error when use in webview.loadurl,
 //comments will be remove by java use regexp
 (function() {
-    if (window.JSBridge && window.JSBridge.inited) {
+    if (window.AndroidJSBridge && window.AndroidJSBridge.inited) {
         return;
     }
 
@@ -19,6 +19,7 @@
     var messagingIframe;
     var CUSTOM_PROTOCOL_SCHEME = "yy";
     var QUEUE_HAS_MESSAGE = "__QUEUE_MESSAGE__";
+    var _this = this
 
     // 创建消息index队列iframe
     function _createQueueReadyIframe() {
@@ -35,28 +36,28 @@
     }
     //set default messageHandler  初始化默认的消息线程
     function init(messageHandler) {
-        if (JSBridge._messageHandler) {
-            throw new Error('JSBridge.init called twice');
+        if (AndroidJSBridge._messageHandler) {
+            throw new Error('AndroidJSBridge.init called twice');
         }
-        _createQueueReadyIframe();
-        _createQueueReadyIframe4biz();
-        JSBridge._messageHandler = messageHandler;
+        _this._createQueueReadyIframe();
+        _this._createQueueReadyIframe4biz();
+        AndroidJSBridge._messageHandler = messageHandler;
         var receivedMessages = receiveMessageQueue;
         receiveMessageQueue = null;
         for (var i = 0; i < receivedMessages.length; i++) {
-            _dispatchMessageFromNative(receivedMessages[i]);
+            _this._dispatchMessageFromNative(receivedMessages[i]);
         }
-        JSBridge.inited = true;
+        AndroidJSBridge.inited = true;
     }
 
     // 发送
     function send(data, responseCallback) {
-        _doSend('send', data, responseCallback);
+        _this._doSend('send', data, responseCallback);
     }
 
     // 注册线程 往数组里面添加值
     function registerHandler(handlerName, handler) {
-        messageHandlers[handlerName] = handler;
+       _this.messageHandlers[handlerName] = handler;
     }
 
     function removeHandler(handlerName, handler) {
@@ -76,12 +77,12 @@
             callbackId = '';
         }
         try {
-             var fn = eval('JSBridge.' + handlerName);
+             var fn = eval('AndroidJSBridge.' + handlerName);
          } catch(e) {
              console.log(e);
          }
          if (typeof fn === 'function'){
-             var responseData = fn.call(JSBridge, JSON.stringify(message), callbackId);
+             var responseData = fn.call(AndroidJSBridge, JSON.stringify(message), callbackId);
              if(responseData){
                  responseCallback = responseCallbacks[callbackId];
                  if (!responseCallback) {
@@ -98,13 +99,13 @@
 
     // 调用线程
     function callHandler(handlerName, data, responseCallback) {
-//        console.log('JSBridge callHandler: ', bridge)
+//        console.log('AndroidJSBridge callHandler: ', bridge)
         // 如果方法不需要参数，只有回调函数，简化JS中的调用
         if (arguments.length == 2 && typeof data == 'function') {
 			responseCallback = data;
 			data = null;
 		}
-        _doSend(handlerName, data, responseCallback);
+        _this._doSend(handlerName, data, responseCallback);
     }
 
     // 提供给native调用,该函数作用:获取sendMessageQueue返回给native,由于android不能直接获取返回的内容,所以使用url shouldOverrideUrlLoading 的方式返回内容
@@ -148,11 +149,11 @@
                 if (message.callbackId) {
                     var callbackResponseId = message.callbackId;
                     responseCallback = function(responseData) {
-                        _doSend('response', responseData, callbackResponseId);
+                        _this._doSend('response', responseData, callbackResponseId);
                     };
                 }
 
-                var handler = JSBridge._messageHandler;
+                var handler = AndroidJSBridge._messageHandler;
                 if (message.handlerName) {
                     handler = messageHandlers[message.handlerName];
                 }
@@ -161,7 +162,7 @@
                     handler(message.data, responseCallback);
                 } catch (exception) {
                     if (typeof console != 'undefined') {
-                        console.log("JSBridge: WARNING: javascript handler threw.", message, exception);
+                        console.log("AndroidJSBridge: WARNING: javascript handler threw.", message, exception);
                     }
                 }
             }
@@ -173,23 +174,22 @@
         if (receiveMessageQueue) {
             receiveMessageQueue.push(messageJSON);
         }
-        _dispatchMessageFromNative(messageJSON);
-
+        _this._dispatchMessageFromNative(messageJSON);
     }
 
-    JSBridge.init = init;
-    JSBridge.doSend = send;
-    JSBridge.registerHandler = registerHandler;
-    JSBridge.callHandler = callHandler;
-    JSBridge._handleMessageFromNative = _handleMessageFromNative;
+    AndroidJSBridge.init = init;
+    AndroidJSBridge.doSend = send;
+    AndroidJSBridge.registerHandler = registerHandler;
+    AndroidJSBridge.callHandler = callHandler;
+    AndroidJSBridge._handleMessageFromNative = _handleMessageFromNative;
 
-    var readyEvent = document.createEvent('Events');
+    var readyEvent = new Event('AndroidJSBridgeReady');
     var jobs = window.WVJBCallbacks || [];
-    readyEvent.initEvent('JSBridgeReady');
-    readyEvent.bridge = JSBridge;
+    readyEvent.bridge = AndroidJSBridge;
     window.WVJBCallbacks = [];
     jobs.forEach(function (job) {
-        job(JSBridge)
+        job(AndroidJSBridge)
     });
+    console.log("AndroidJSBridge: JS文件执行了");
     document.dispatchEvent(readyEvent);
 })();

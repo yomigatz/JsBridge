@@ -1,0 +1,43 @@
+apply plugin: 'com.android.library'
+
+version = "1.0.0"
+
+android {
+    compileSdkVersion 33
+
+    defaultConfig {
+        minSdkVersion 17
+        targetSdkVersion 33
+        versionCode 1
+        versionName version
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            assets.srcDirs = ['src/main/assets', 'src\\main\\assets']
+        }
+    }
+
+    lintOptions { // 消除lint警告
+        abortOnError false
+        checkReleaseBuilds false
+    }
+    android.libraryVariants.all {
+        variant ->
+            variant.outputs.all {
+                outputFileName = "Lib-JSBridge" + "@" + defaultConfig.versionName + ".aar"
+            }
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'com.google.code.gson:gson:2.8.5'
+}
+

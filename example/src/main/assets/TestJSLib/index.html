@@ -17,25 +17,18 @@
 
 
     </style>
-    <script src='./JSBridge.js'></script>
+    <script src='./TestJSLibJSBridge.js' charset="utf-8"></script>
 
     <script type='text/javascript'>
 
-    bridge.registerHandler("functionInJs", function(data, responseCallback) {
-        if (responseCallback) {
-            var responseData = "Javascript Says Right back aka!";
-            responseCallback(responseData);
-        }
-    });
-
        function login(){
             console.log("login----------------");
-<!--            window.JsBridge.callHandler("login", {}, function(res) {-->
+<!--            window.AndroidJSBridge.callHandler("login", {}, function(res) {-->
 <!--                 console.log("callback&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;"+JSON.stringify(res));-->
 <!--                 alert(JSON.stringify(res))-->
 <!--            });-->
 
-            JSBridge.callHandler(
+            window.AndroidJSBridge.callHandler(
                 'submitFromWeb'
                 , {'param': '中文测试'}
                 , function(responseData) {

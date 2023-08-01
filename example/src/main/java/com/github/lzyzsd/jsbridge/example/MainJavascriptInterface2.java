@@ -1,11 +1,11 @@
+
 package com.github.lzyzsd.jsbridge.example;
 
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
-
-import com.github.lzyzsd.jsbridge.BridgeWebView;
-import com.github.lzyzsd.jsbridge.OnBridgeCallback;
+import com.common.anni.jsbridge.BridgeWebView;
+import com.common.anni.jsbridge.OnBridgeCallback;
 
 import java.util.Map;
 
@@ -14,16 +14,16 @@ import java.util.Map;
  * Author: bigwang
  * Description:
  */
-public class MainJavascriptInterface extends BridgeWebView.BaseJavascriptInterface {
+public class MainJavascriptInterface2 extends BridgeWebView.BaseJavascriptInterface {
 
     private BridgeWebView mWebView;
 
-    public MainJavascriptInterface(Map<String, OnBridgeCallback> callbacks, BridgeWebView webView) {
+    public MainJavascriptInterface2(Map<String, OnBridgeCallback> callbacks, BridgeWebView webView) {
         super(callbacks);
         mWebView = webView;
     }
 
-    public MainJavascriptInterface(Map<String, OnBridgeCallback> callbacks) {
+    public MainJavascriptInterface2(Map<String, OnBridgeCallback> callbacks) {
         super(callbacks);
     }
 

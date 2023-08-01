@@ -1,4 +1,4 @@
-package com.github.lzyzsd.jsbridge.example.yanni;
+package com.common.anni.jsbridge;
 
 import android.content.Context;
 import android.webkit.WebView;
@@ -18,12 +18,12 @@ public class BridgeUtil {
 	final static String SPLIT_MARK = "/";
 	
 	final static String CALLBACK_ID_FORMAT = "JAVA_CB_%s";
-	final static String JS_HANDLE_MESSAGE_FROM_JAVA = "javascript:WebViewJavascriptBridge._handleMessageFromNative(%s);";
-	final static String JS_FETCH_QUEUE_FROM_JAVA = "javascript:WebViewJavascriptBridge._fetchQueue();";
+	final static String JS_HANDLE_MESSAGE_FROM_JAVA = "javascript:AndroidJSBridge._handleMessageFromNative(%s);";
+	final static String JS_FETCH_QUEUE_FROM_JAVA = "javascript:AndroidJSBridge._fetchQueue();";
 //	public final static String JAVASCRIPT_STR = "javascript:";
 
 
-	public static final String JAVA_SCRIPT = "WebViewJavascriptBridge.js";
+	public static final String JAVA_SCRIPT = "AndroidJSBridge.js";
 	public final static String JAVASCRIPT_STR = "javascript:%s";
 
 	/**
@@ -39,7 +39,7 @@ public class BridgeUtil {
 	}
 
 	/**
-	 * 这里只是加载lib包中assets中的 WebViewJavascriptBridge.js
+	 * 这里只是加载lib包中assets中的 AndroidJSBridge.js
 	 * @param view webview
 	 * @param path 路径
 	 */

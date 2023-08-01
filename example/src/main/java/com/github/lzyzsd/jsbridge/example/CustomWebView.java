@@ -7,11 +7,11 @@ import android.util.AttributeSet;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.github.lzyzsd.jsbridge.BridgeHandler;
-import com.github.lzyzsd.jsbridge.BridgeHelper;
-import com.github.lzyzsd.jsbridge.IWebView;
-import com.github.lzyzsd.jsbridge.OnBridgeCallback;
-import com.github.lzyzsd.jsbridge.WebViewJavascriptBridge;
+import com.common.anni.jsbridge.BridgeHandler;
+import com.common.anni.jsbridge.BridgeHelper;
+import com.common.anni.jsbridge.IWebView;
+import com.common.anni.jsbridge.OnBridgeCallback;
+import com.common.anni.jsbridge.AndroidJSBridge;
 
 /**
  * 采用BridgeHelper集成JsBridge功能示例.定制WebView,可只添加实际需要的JsBridge接口.
@@ -20,7 +20,7 @@ import com.github.lzyzsd.jsbridge.WebViewJavascriptBridge;
  * @date 2019-07-07
  */
 @SuppressLint("SetJavaScriptEnabled")
-public class CustomWebView extends WebView implements WebViewJavascriptBridge, IWebView {
+public class CustomWebView extends WebView implements AndroidJSBridge, IWebView {
 
     private BridgeHelper bridgeHelper;
 

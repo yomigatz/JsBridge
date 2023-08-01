@@ -19,6 +19,8 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.common.anni.jsbridge.BridgeWebView;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,7 +35,7 @@ public class H5Activity extends Activity implements OnClickListener {
 
     private final String TAG = "MainActivity";
 
-    WebView webView;
+    BridgeWebView webView;
 
     Button button;
 
@@ -68,11 +70,12 @@ public class H5Activity extends Activity implements OnClickListener {
 
     private void loadUrl(){
         //加载本地html
-        webView.loadUrl("file:///android_asset/h5/my_index.html");
+        webView.loadUrl("file:///android_asset/TestJSLib/index.html");
         Log.d("NRRR","+++++++++1");
-        String jsCommand = assetFile2Str(this, "h5/JSBridge1.js");
+        String jsCommand = assetFile2Str(this, "AndroidJSBridge.js");
+//        webView.evaluateJavascript("javascript:" + jsCommand, null);
         webView.loadUrl("javascript:" + jsCommand);
-        webView.addJavascriptInterface(this, "JSBridge");
+        webView.addJavascriptInterface(this, "AndroidJSBridge");
         Log.d("NRRR","+++++++++2");
     }
 
@@ -124,21 +127,6 @@ public class H5Activity extends Activity implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-
-//        webView.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                String jscode = "javascript:JSBridge.callback('" + callbackname + "'," + response + ")";
-//                Log.e("xxxxxx", jscode);
-//                ValueCallback<String> resultCallback = new ValueCallback<String>() {
-//                    @Override
-//                    public void onReceiveValue(String value) {
-//                        Log.e("2222222", value);
-//                    }
-//                };
-//                webView.evaluateJavascript(jscode, resultCallback);
-//            }
-//        });
     }
 
     public String assetFile2Str(Context c, String urlStr) {
@@ -205,6 +193,7 @@ public class H5Activity extends Activity implements OnClickListener {
     public void submitFromWeb(String msg, String callbackId) {
         Log.d("NRRR","submitFromWeb >> " + msg);
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        handleCallback(callbackId,"submitFromWeb >>" + msg);
     }
 
 
@@ -213,7 +202,7 @@ public class H5Activity extends Activity implements OnClickListener {
             webView.post(new Runnable() {
                 @Override
                 public void run() {
-                    String jscode = "javascript:xiangxuejs.callback('" + callbackname + "'," + response + ")";
+                    String jscode = "javascript:JSBridge.callHandler('" + callbackname + "'," + response + ")";
                     Log.e("xxxxxx", jscode);
                     ValueCallback<String> resultCallback = new ValueCallback<String>() {
                         @Override

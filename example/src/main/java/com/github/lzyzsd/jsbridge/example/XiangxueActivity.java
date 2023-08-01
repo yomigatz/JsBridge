@@ -68,7 +68,7 @@ public class XiangxueActivity extends Activity implements OnClickListener {
         webView.getSettings().setAllowFileAccess(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         //加载本地html
-        webView.loadUrl("file:///android_asset/web/my_index.html");
+        webView.loadUrl("file:///android_asset/web/index.html");
 
         String jsCommand = assetFile2Str(this, "web/xiangxuejs.js");
         webView.loadUrl("javascript:" + jsCommand);
