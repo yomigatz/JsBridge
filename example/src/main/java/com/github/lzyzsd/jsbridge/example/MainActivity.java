@@ -98,10 +98,10 @@ public class MainActivity extends Activity implements OnClickListener {
         webView.setGson(new Gson());
 //		webView.loadUrl("http://www.baidu.com");
 		webView.loadUrl("file:///android_asset/test/demo.html");
-//		webView.loadUrl("file:///android_asset/"+ H5SourceManager.ROOT_PATH +"/index.html#/analysis?");
-//        String url = "file:///android_asset/brH5/index.html#/analysis?token=eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAEWMwQ6DIBBE_2XPbsOCoHjyVxYK1cZWA5g0afrvhfTQ25vMzHvDvawwQc_RaWElylE57EMkZK8jxpGMYGUGrQR0sHKBiYwVauhJUgf5dPXdmpwruLTuoVIHfF5r9gunW0A-DvxX4XX8JHYYbZPwWZb9Wed5CdvGKfBMRl38_mji6iEhtPx8Acf4DQesAAAA.1Gs0t2EZlD3PdMGAdssjcEV5E0O9-HYP06LM3tkh4YMmxzm9d67MxbN4iqZtISKiFU0-_-SUk4F8f2x8rEjcyg&version=V1.1.0.20230728&apptype=Android&deviceNumber=EA09003A&env=dev&language=zh_CN";
-//        String url = "file:///android_asset/brH5/index.html#/order?token=eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAEWMwQ6DIBBE_2XPbsOCoHjyVxYK1cZWA5g0afrvhfTQ25vMzHvDvawwQc_RaWElylE57EMkZK8jxpGMYGUGrQR0sHKBiYwVauhJUgf5dPXdmpwruLTuoVIHfF5r9gunW0A-DvxX4XX8JHYYbZPwWZb9Wed5CdvGKfBMRl38_mji6iEhtPx8Acf4DQesAAAA.1Gs0t2EZlD3PdMGAdssjcEV5E0O9-HYP06LM3tkh4YMmxzm9d67MxbN4iqZtISKiFU0-_-SUk4F8f2x8rEjcyg&version=V1.1.0.20230729&apptype=Android&deviceNumber=EA09003A&env=dev&language=zh_CN";
-//        webView.loadUrl("file:///android_asset/test/index.html");
+//		webView.loadUrl("file:///android_asset/"+ H5SourceManager.ROOT_PATH +"/jslib_index.html#/analysis?");
+//        String url = "file:///android_asset/brH5/jslib_index.html#/analysis?token=eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAEWMwQ6DIBBE_2XPbsOCoHjyVxYK1cZWA5g0afrvhfTQ25vMzHvDvawwQc_RaWElylE57EMkZK8jxpGMYGUGrQR0sHKBiYwVauhJUgf5dPXdmpwruLTuoVIHfF5r9gunW0A-DvxX4XX8JHYYbZPwWZb9Wed5CdvGKfBMRl38_mji6iEhtPx8Acf4DQesAAAA.1Gs0t2EZlD3PdMGAdssjcEV5E0O9-HYP06LM3tkh4YMmxzm9d67MxbN4iqZtISKiFU0-_-SUk4F8f2x8rEjcyg&version=V1.1.0.20230728&apptype=Android&deviceNumber=EA09003A&env=dev&language=zh_CN";
+//        String url = "file:///android_asset/brH5/jslib_index.html#/order?token=eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAEWMwQ6DIBBE_2XPbsOCoHjyVxYK1cZWA5g0afrvhfTQ25vMzHvDvawwQc_RaWElylE57EMkZK8jxpGMYGUGrQR0sHKBiYwVauhJUgf5dPXdmpwruLTuoVIHfF5r9gunW0A-DvxX4XX8JHYYbZPwWZb9Wed5CdvGKfBMRl38_mji6iEhtPx8Acf4DQesAAAA.1Gs0t2EZlD3PdMGAdssjcEV5E0O9-HYP06LM3tkh4YMmxzm9d67MxbN4iqZtISKiFU0-_-SUk4F8f2x8rEjcyg&version=V1.1.0.20230729&apptype=Android&deviceNumber=EA09003A&env=dev&language=zh_CN";
+//        webView.loadUrl("file:///android_asset/test/jslib_index.html");
 //        webView.loadUrl(url);
         User user = new User();
         Location location = new Location();

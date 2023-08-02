@@ -20,6 +20,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.common.anni.jsbridge.BridgeWebView;
+import com.common.anni.jsbridge.OnBridgeCallback;
+import com.github.lzyzsd.jsbridge.example.testJSLib.TestJSInterface;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,12 +31,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class H5Activity extends Activity implements OnClickListener {
 
-    private final String TAG = "MainActivity";
+    private final String TAG = "H5Activity";
 
     BridgeWebView webView;
 
@@ -45,43 +46,37 @@ public class H5Activity extends Activity implements OnClickListener {
         setContentView(R.layout.activity_h5);
 
         webView = findViewById(R.id.webView);
-        webView.getSettings().setJavaScriptEnabled(true);
-        //设置为ChromeClinet 才能执行js代码
-        WebChromeClient webChromeClient = new WebChromeClient();
-        webView.setWebChromeClient(webChromeClient);
-        webView.getSettings().setAllowFileAccess(true);
-        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-
         button = (Button) findViewById(R.id.button);
-
         button.setOnClickListener(this);
 
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return super.shouldOverrideUrlLoading(view, request);
-            }
-        });
-
+//        webView.setWebViewClient(new WebViewClient() {
+//            @Override
+//            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+//                return super.shouldOverrideUrlLoading(view, request);
+//            }
+//        });
         initSetting();
 
         loadUrl();
+
     }
 
     private void loadUrl(){
         //加载本地html
-        webView.loadUrl("file:///android_asset/TestJSLib/index.html");
+        String url = "file:///android_asset/brH5/index.html#/analysis?token=eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAEWMQQ7CIBRE7_LXYPhQELrqVT4FLKYKKW1iYry71I27N5mZ94b7nmEEcklbQsujCpYPyUjuMSFPQrqQlByuygCDTDuMaJxwg7FCMmiH7--zaa2D33KJnRjQEXqeF9pukVOt_F_FV_1JUGs0p4SOfSnPPm9LXFfaIk1o1GUuj1PcPSiElp8vglLWUKwAAAA.mnp1kOSZuhrGClr_YHZa_V1JHWg0sB-YPL5J8aR31zri9clEhDVIMSTIp9mETEYIYbZwXjSYdXHU7Se91i4Qhw&version=V1.1.0.20230802&apptype=Android&deviceNumber=EA09003A&env=dev&language=zh_CN";
+//        String url = "file:///android_asset/TestJSLib/jslib_index.html";
+        webView.loadUrl(url);
         Log.d("NRRR","+++++++++1");
-        String jsCommand = assetFile2Str(this, "AndroidJSBridge.js");
-//        webView.evaluateJavascript("javascript:" + jsCommand, null);
-        webView.loadUrl("javascript:" + jsCommand);
-        webView.addJavascriptInterface(this, "AndroidJSBridge");
-        Log.d("NRRR","+++++++++2");
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initSetting() {
+        //设置为ChromeClinet 才能执行js代码
+        WebChromeClient webChromeClient = new WebChromeClient();
+        webView.setWebChromeClient(webChromeClient);
+
         WebSettings settings = webView.getSettings();
+        settings.setAllowFileAccess(true);
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setPluginState(WebSettings.PluginState.ON);
@@ -105,28 +100,23 @@ public class H5Activity extends Activity implements OnClickListener {
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 
         settings.setDefaultTextEncodingName("utf-8");
-        try {//本地HTML里面有跨域的请求 原生webview需要设置之后才能实现跨域请求
-            if (Build.VERSION.SDK_INT >= 16) {
-                Class<?> clazz = webView.getSettings().getClass();
-                Method method = clazz.getMethod(
-                        "setAllowUniversalAccessFromFileURLs", boolean.class);
-                if (method != null) {
-                    method.invoke(webView.getSettings(), true);
-                }
-            }
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+
+        webView.addJavascriptInterface(new TestJSInterface(webView.getCallbacks(),webView), "AndroidJSBridge");
+        webView.setGson(new Gson());
+
     }
 
     @Override
     public void onClick(View v) {
+        if (button.equals(v)) {
+            Log.d(TAG,"+++++++++++");
+            webView.callHandler("functionInJs", "data from Java +++", new OnBridgeCallback() {
+                @Override
+                public void onCallBack(String data) {
+                    Log.i(TAG, "reponse data from js " + data);
+                }
+            });
+        }
     }
 
     public String assetFile2Str(Context c, String urlStr) {
@@ -202,7 +192,7 @@ public class H5Activity extends Activity implements OnClickListener {
             webView.post(new Runnable() {
                 @Override
                 public void run() {
-                    String jscode = "javascript:JSBridge.callHandler('" + callbackname + "'," + response + ")";
+                    String jscode = "javascript:AndroidJSBridge.callHandler('" + callbackname + "'," + response + ")";
                     Log.e("xxxxxx", jscode);
                     ValueCallback<String> resultCallback = new ValueCallback<String>() {
                         @Override

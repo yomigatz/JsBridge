@@ -1,7 +1,7 @@
 function connectWebViewJavascriptBridge(callback) {
     if (window.AndroidJSBridge && AndroidJSBridge.inited) {
          console.log('JS connectWebViewJavascriptBridge 初始化了');
-         callback(JSBridge)
+         callback(AndroidJSBridge)
     } else {
        console.log('JS connectWebViewJavascriptBridge 添加监听');
      document.addEventListener(
@@ -25,6 +25,14 @@ connectWebViewJavascriptBridge(function(bridge) {
         if (responseCallback) {
             console.log('JS responding with', data);
             responseCallback(data);
+        }
+    });
+
+    bridge.registerHandler("js_bridge_channel", function(data, responseCallback) {
+        document.getElementById("show").innerHTML = ("data from Java: = " + data + Date.now());
+        if (responseCallback) {
+            var responseData = "Javascript Says Right back aka!";
+            responseCallback(responseData);
         }
     });
 })

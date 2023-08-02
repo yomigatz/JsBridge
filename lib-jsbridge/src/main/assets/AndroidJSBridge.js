@@ -2,7 +2,7 @@
 //since comments will cause error when use in webview.loadurl,
 //comments will be remove by java use regexp
 (function() {
-    if (window.AndroidJSBridge && window.AndroidJSBridge.inited) {
+    if (window.AndroidJSBridge && AndroidJSBridge.inited) {
         return;
     }
 
@@ -19,7 +19,6 @@
     var messagingIframe;
     var CUSTOM_PROTOCOL_SCHEME = "yy";
     var QUEUE_HAS_MESSAGE = "__QUEUE_MESSAGE__";
-    var _this = this
 
     // 创建消息index队列iframe
     function _createQueueReadyIframe() {
@@ -39,25 +38,25 @@
         if (AndroidJSBridge._messageHandler) {
             throw new Error('AndroidJSBridge.init called twice');
         }
-        _this._createQueueReadyIframe();
-        _this._createQueueReadyIframe4biz();
+        _createQueueReadyIframe();
+        _createQueueReadyIframe4biz();
         AndroidJSBridge._messageHandler = messageHandler;
         var receivedMessages = receiveMessageQueue;
         receiveMessageQueue = null;
         for (var i = 0; i < receivedMessages.length; i++) {
-            _this._dispatchMessageFromNative(receivedMessages[i]);
+            _dispatchMessageFromNative(receivedMessages[i]);
         }
         AndroidJSBridge.inited = true;
     }
 
     // 发送
     function send(data, responseCallback) {
-        _this._doSend('send', data, responseCallback);
+        _doSend('send', data, responseCallback);
     }
 
     // 注册线程 往数组里面添加值
     function registerHandler(handlerName, handler) {
-       _this.messageHandlers[handlerName] = handler;
+       messageHandlers[handlerName] = handler;
     }
 
     function removeHandler(handlerName, handler) {
@@ -105,7 +104,7 @@
 			responseCallback = data;
 			data = null;
 		}
-        _this._doSend(handlerName, data, responseCallback);
+        _doSend(handlerName, data, responseCallback);
     }
 
     // 提供给native调用,该函数作用:获取sendMessageQueue返回给native,由于android不能直接获取返回的内容,所以使用url shouldOverrideUrlLoading 的方式返回内容
@@ -149,7 +148,7 @@
                 if (message.callbackId) {
                     var callbackResponseId = message.callbackId;
                     responseCallback = function(responseData) {
-                        _this._doSend('response', responseData, callbackResponseId);
+                        _doSend('response', responseData, callbackResponseId);
                     };
                 }
 
@@ -174,7 +173,7 @@
         if (receiveMessageQueue) {
             receiveMessageQueue.push(messageJSON);
         }
-        _this._dispatchMessageFromNative(messageJSON);
+        _dispatchMessageFromNative(messageJSON);
     }
 
     AndroidJSBridge.init = init;
