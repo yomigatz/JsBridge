@@ -63,8 +63,13 @@
         delete messageHandlers[handlerName];
     }
 
+    function _test(){
+        console.log('AndroidJSBridge _test: ++++');
+    }
+
     //sendMessage add message, 触发native处理 sendMessage
     function _doSend(handlerName, message, responseCallback) {
+        console.log('AndroidJSBridge _doSend: ++++');
         var callbackId;
         if(typeof responseCallback === 'string'){
             callbackId = responseCallback;
@@ -98,10 +103,11 @@
 
     // 调用线程
     function callHandler(handlerName, data, responseCallback) {
-//        console.log('AndroidJSBridge callHandler: ', bridge)
+        console.log('AndroidJSBridge callHandler: ++++', handlerName, data);
         // 如果方法不需要参数，只有回调函数，简化JS中的调用
         if (arguments.length == 2 && typeof data == 'function') {
-			responseCallback = data;
+		    console.log('AndroidJSBridge callHandler: ++++');
+           	responseCallback = data;
 			data = null;
 		}
         _doSend(handlerName, data, responseCallback);
