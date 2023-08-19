@@ -18,12 +18,12 @@ public class BridgeUtil {
 	final static String SPLIT_MARK = "/";
 	
 	final static String CALLBACK_ID_FORMAT = "JAVA_CB_%s";
-	final static String JS_HANDLE_MESSAGE_FROM_JAVA = "javascript:AndroidJSBridge._handleMessageFromNative(%s);";
-	final static String JS_FETCH_QUEUE_FROM_JAVA = "javascript:AndroidJSBridge._fetchQueue();";
+	final static String JS_HANDLE_MESSAGE_FROM_JAVA = "javascript:AndroidJavascriptBridge._handleMessageFromNative(%s);";
+	final static String JS_FETCH_QUEUE_FROM_JAVA = "javascript:AndroidJavascriptBridge._fetchQueue();";
 //	public final static String JAVASCRIPT_STR = "javascript:";
 
 
-	public static final String JAVA_SCRIPT = "AndroidJSBridge.js";
+	public static final String JAVA_SCRIPT = "AndroidJavascriptBridge.js";
 	public final static String JAVASCRIPT_STR = "javascript:%s";
 
 	/**
@@ -39,7 +39,7 @@ public class BridgeUtil {
 	}
 
 	/**
-	 * 这里只是加载lib包中assets中的 AndroidJSBridge.js
+	 * 这里只是加载lib包中assets中的 AndroidJavascriptBridge.js
 	 * @param view webview
 	 * @param path 路径
 	 */

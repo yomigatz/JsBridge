@@ -19,11 +19,11 @@ import java.util.Map;
  * @author ZhengAn
  * @date 2019-06-30
  */
-public class BridgeHelper implements AndroidJSBridge {
+public class BridgeHelper implements AndroidJavascriptBridge {
 
     private static final String TAG = "BridgeHelper";
 
-    private static final String BRIDGE_JS = "AndroidJSBridge.js";
+    private static final String BRIDGE_JS = "AndroidJavascriptBridge.js";
     private Map<String, OnBridgeCallback> responseCallbacks = new HashMap<>();
     private Map<String, BridgeHandler> messageHandlers = new HashMap<>();
     private BridgeHandler defaultHandler = new DefaultHandler();

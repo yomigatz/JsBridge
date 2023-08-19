@@ -1,7 +1,7 @@
 package com.common.anni.jsbridge;
 
 
-public interface AndroidJSBridge {
+public interface AndroidJavascriptBridge {
 	
 	void sendToWeb(String data);
 

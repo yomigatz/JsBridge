@@ -63,8 +63,8 @@ public class H5Activity extends Activity implements OnClickListener {
 
     private void loadUrl(){
         //加载本地html
-        String url = "file:///android_asset/brH5/index.html#/analysis?token=eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAEWMQQ7CIBRE7_LXYPhQELrqVT4FLKYKKW1iYry71I27N5mZ94b7nmEEcklbQsujCpYPyUjuMSFPQrqQlByuygCDTDuMaJxwg7FCMmiH7--zaa2D33KJnRjQEXqeF9pukVOt_F_FV_1JUGs0p4SOfSnPPm9LXFfaIk1o1GUuj1PcPSiElp8vglLWUKwAAAA.mnp1kOSZuhrGClr_YHZa_V1JHWg0sB-YPL5J8aR31zri9clEhDVIMSTIp9mETEYIYbZwXjSYdXHU7Se91i4Qhw&version=V1.1.0.20230802&apptype=Android&deviceNumber=EA09003A&env=dev&language=zh_CN";
-//        String url = "file:///android_asset/TestJSLib/jslib_index.html";
+//        String url = "file:///android_asset/brH5/index.html#/analysis?token=eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAEWMQQ7CIBRE7_LXYPhQELrqVT4FLKYKKW1iYry71I27N5mZ94b7nmEEcklbQsujCpYPyUjuMSFPQrqQlByuygCDTDuMaJxwg7FCMmiH7--zaa2D33KJnRjQEXqeF9pukVOt_F_FV_1JUGs0p4SOfSnPPm9LXFfaIk1o1GUuj1PcPSiElp8vglLWUKwAAAA.mnp1kOSZuhrGClr_YHZa_V1JHWg0sB-YPL5J8aR31zri9clEhDVIMSTIp9mETEYIYbZwXjSYdXHU7Se91i4Qhw&version=V1.1.0.20230802&apptype=Android&deviceNumber=EA09003A&env=dev&language=zh_CN";
+        String url = "file:///android_asset/TestJSLib/jslib_index.html";
         webView.loadUrl(url);
         Log.d("NRRR","+++++++++1");
     }
@@ -101,7 +101,7 @@ public class H5Activity extends Activity implements OnClickListener {
 
         settings.setDefaultTextEncodingName("utf-8");
 
-        webView.addJavascriptInterface(new TestJSInterface(webView.getCallbacks(),webView), "AndroidJSBridge");
+        webView.addJavascriptInterface(new TestJSInterface(webView.getCallbacks(),webView), "AndroidJavascriptBridge");
         webView.setGson(new Gson());
 
     }
@@ -114,93 +114,6 @@ public class H5Activity extends Activity implements OnClickListener {
                 @Override
                 public void onCallBack(String data) {
                     Log.i(TAG, "reponse data from js " + data);
-                }
-            });
-        }
-    }
-
-    public String assetFile2Str(Context c, String urlStr) {
-        InputStream in = null;
-        try {
-            in = c.getAssets().open(urlStr);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-            String line = null;
-            StringBuilder sb = new StringBuilder();
-            do {
-                line = bufferedReader.readLine();
-                if (line != null && !line.matches("^\\s*\\/\\/.*")) {
-                    sb.append(line);
-                }
-            } while (line != null);
-
-            bufferedReader.close();
-            in.close();
-
-            return sb.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                }
-            }
-        }
-        return null;
-    }
-
-    @JavascriptInterface
-    public void response(String msg) {
-        Log.d("NRRR","response >> " + msg);
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-        try {
-            JSONObject jsonObject = new JSONObject(msg);
-            JSONObject param = jsonObject.getJSONObject("param");
-            String callbackname = param.getString("callbackname");
-            handleCallback(callbackname, "response");
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @JavascriptInterface
-    public void send(String msg) {
-        Log.d("NRRR","send >> " + msg);
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-        try {
-            JSONObject jsonObject = new JSONObject(msg);
-            JSONObject param = jsonObject.getJSONObject("param");
-            String callbackname = param.getString("callbackname");
-            handleCallback(callbackname, "send");
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    @JavascriptInterface
-    public void submitFromWeb(String msg, String callbackId) {
-        Log.d("NRRR","submitFromWeb >> " + msg);
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-        handleCallback(callbackId,"submitFromWeb >>" + msg);
-    }
-
-
-    public void handleCallback(final String callbackname, final String response) {
-        if (!TextUtils.isEmpty(callbackname) && !TextUtils.isEmpty(response)) {
-            webView.post(new Runnable() {
-                @Override
-                public void run() {
-                    String jscode = "javascript:AndroidJSBridge.callHandler('" + callbackname + "'," + response + ")";
-                    Log.e("xxxxxx", jscode);
-                    ValueCallback<String> resultCallback = new ValueCallback<String>() {
-                        @Override
-                        public void onReceiveValue(String value) {
-                            Log.e("2222222", value);
-                        }
-                    };
-                    webView.evaluateJavascript(jscode, resultCallback);
                 }
             });
         }

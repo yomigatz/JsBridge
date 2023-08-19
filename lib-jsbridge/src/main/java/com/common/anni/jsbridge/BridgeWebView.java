@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressLint("SetJavaScriptEnabled")
-public class BridgeWebView extends WebView implements AndroidJSBridge, BridgeWebViewClient.OnLoadJSListener {
+public class BridgeWebView extends WebView implements AndroidJavascriptBridge, BridgeWebViewClient.OnLoadJSListener {
 
     private final int URL_MAX_CHARACTER_NUM = 2097152;
     private Map<String, OnBridgeCallback> mCallbacks = new ArrayMap<>();

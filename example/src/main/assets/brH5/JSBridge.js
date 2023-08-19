@@ -34,15 +34,15 @@ if (isIos()) {
     });
 } else if (isAndroid()) {
     function setupWebViewJavascriptBridge(callback) {
-        if (window.AndroidJSBridge && AndroidJSBridge.inited) {
+        if (window.AndroidJavascriptBridge && AndroidJavascriptBridge.inited) {
             console.log('JS connectWebViewJavascriptBridge 监听 callback');
-            return callback(AndroidJSBridge);
+            return callback(AndroidJavascriptBridge);
         } else {
             console.log('JS connectWebViewJavascriptBridge 添加监听');
             document.addEventListener(
-                   'AndroidJSBridgeReady'
+                   'AndroidJavascriptBridgeReady'
                    , function() {
-                       callback(AndroidJSBridge)
+                       callback(AndroidJavascriptBridge)
                    },
                    false
                );

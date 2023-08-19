@@ -11,7 +11,7 @@ import com.common.anni.jsbridge.BridgeHandler;
 import com.common.anni.jsbridge.BridgeHelper;
 import com.common.anni.jsbridge.IWebView;
 import com.common.anni.jsbridge.OnBridgeCallback;
-import com.common.anni.jsbridge.AndroidJSBridge;
+import com.common.anni.jsbridge.AndroidJavascriptBridge;
 
 /**
  * 采用BridgeHelper集成JsBridge功能示例.定制WebView,可只添加实际需要的JsBridge接口.
@@ -20,7 +20,7 @@ import com.common.anni.jsbridge.AndroidJSBridge;
  * @date 2019-07-07
  */
 @SuppressLint("SetJavaScriptEnabled")
-public class CustomWebView extends WebView implements AndroidJSBridge, IWebView {
+public class CustomWebView extends WebView implements AndroidJavascriptBridge, IWebView {
 
     private BridgeHelper bridgeHelper;
 
